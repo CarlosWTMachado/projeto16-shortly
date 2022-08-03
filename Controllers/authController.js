@@ -1,5 +1,7 @@
 import db from '../dbStrategy/db.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import {jwtSecret} from '../variaveisDeAmbiente.js'
 import {queryInsertUsers} from '../Queries/queries.js';
 
 export async function Signup(req, res) {
@@ -16,8 +18,12 @@ export async function Signup(req, res) {
 }
 
 export async function Signin(req, res) {
+	const {email, password} = req.body;
 	try {
-		res.sendStatus(200);
+		const dados = {email};
+		const configuracoes = { expiresIn: 60*60*2}
+		const token = jwt.sign(dados, jwtSecret, configuracoes);
+		res.status(200).send(token);
 	} catch (error) {
 		return res.status(500).send(error);
 	}

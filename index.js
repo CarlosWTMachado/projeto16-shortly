@@ -1,15 +1,15 @@
 import express, { json } from 'express';
 import cors from 'cors';
-import dotenv from "dotenv";
+import {aplicationPort} from './variaveisDeAmbiente.js'
 import AuthRouter from './Routers/authRouter.js';
 
-dotenv.config();
+
 const server = express();
 server.use(cors());
 server.use(json());
 
 server.use(AuthRouter);
 
-server.listen(process.env.PORT, () => {
+server.listen(aplicationPort, () => {
 	console.log("Rodando ...");
 });
