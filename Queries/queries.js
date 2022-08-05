@@ -22,3 +22,25 @@ export const queryInsertShortUrl = `
 	INSERT INTO "shortUrls" ("shortUrl")
 	VALUES ($1)
 `;
+
+export const querySelectUrlById = `
+	SELECT s.id, s."shortUrl", u.url
+	FROM "shortUrls" s
+	JOIN urls u
+	ON s.id = u."shortUrlId"
+	WHERE s.id = $1
+`;
+
+export const querySelectShortUrlByName = `
+	SELECT s.*, u.url
+	FROM "shortUrls" s
+	JOIN urls u
+	ON s.id = u."shortUrlId"
+	WHERE "shortUrl" = $1
+`;
+
+export const queryUpdateShortUrlVisitCount = `
+	UPDATE "shortUrls"
+	VALUES SET "visitCount" = $1
+	WHERE id = $2
+`;
