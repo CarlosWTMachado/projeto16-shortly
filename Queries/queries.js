@@ -30,3 +30,17 @@ export const querySelectUrlById = `
 	ON s.id = u."shortUrlId"
 	WHERE s.id = $1
 `;
+
+export const querySelectShortUrlByName = `
+	SELECT s.*, u.url
+	FROM "shortUrls" s
+	JOIN urls u
+	ON s.id = u."shortUrlId"
+	WHERE "shortUrl" = $1
+`;
+
+export const queryUpdateShortUrlVisitCount = `
+	UPDATE "shortUrls"
+	VALUES SET "visitCount" = $1
+	WHERE id = $2
+`;
