@@ -1,7 +1,7 @@
 import db from '../dbStrategy/db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {jwtSecret} from '../variaveisDeAmbiente.js'
+import {jwtSecret} from '../variaveisDeAmbiente.js';
 import {queryInsertUsers} from '../Queries/queries.js';
 
 export async function Signup(req, res) {
