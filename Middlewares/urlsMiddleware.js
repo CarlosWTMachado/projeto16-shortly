@@ -1,5 +1,6 @@
 import {authorizationSchema, urlSchema} from '../Schemas/schemas.js';
 import db from '../dbStrategy/db.js';
+import {querySelectUrlById} from '../Queries/queries.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../variaveisDeAmbiente.js';
@@ -38,4 +39,23 @@ function VerifyUrl(body){
 		code: 422,
 		message: validation.error.details.map(value => value.message)
 	};
+}
+
+export async function ValidateUrlId(req, res, next) {
+	try{
+		res.locals.url = await VerifyShortUrl(req.params.id);
+		next();
+	}catch (error){
+		return res.status(error.code).send(error.message);
+	}
+}
+
+async function VerifyShortUrl(id){
+	try{
+		const {rows: url} = await db.query(querySelectUrlById, [id]);
+		if(url.length < 1) throw {code: 404, message: ""};
+		return url[0];
+	}catch(error){
+		throw error;
+	}
 }

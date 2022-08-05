@@ -22,3 +22,11 @@ export const queryInsertShortUrl = `
 	INSERT INTO "shortUrls" ("shortUrl")
 	VALUES ($1)
 `;
+
+export const querySelectUrlById = `
+	SELECT s.id, s."shortUrl", u.url
+	FROM "shortUrls" s
+	JOIN urls u
+	ON s.id = u."shortUrlId"
+	WHERE s.id = $1
+`;
