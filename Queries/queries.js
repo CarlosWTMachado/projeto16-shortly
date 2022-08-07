@@ -44,3 +44,24 @@ export const queryUpdateShortUrlVisitCount = `
 	VALUES SET "visitCount" = $1
 	WHERE id = $2
 `;
+
+export const querySelectShortUrlByEmail = `
+	SELECT us.email, s."shortUrl"
+	FROM urls u
+	JOIN "shortUrls" s
+	ON u."shortUrlId" = s.id
+	JOIN users us
+	ON u."userId" = us.id
+	WHERE us.email = $1
+	AND s.id = $2
+`;
+
+export const queryDeleteShortUrlById = `
+	DELETE FROM "shortUrls"
+	WHERE id = $1
+`;
+
+export const queryDeleteUrlByShortUrlId = `
+	DELETE FROM urls
+	WHERE "shortUrlId" = $1
+`;
