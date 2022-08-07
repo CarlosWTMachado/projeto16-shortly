@@ -1,6 +1,12 @@
 import db from '../dbStrategy/db.js';
 import { nanoid } from 'nanoid'
-import {queryInsertShortUrl, queryInsertUrl, queryUpdateShortUrlVisitCount} from '../Queries/queries.js';
+import {
+	queryInsertShortUrl,
+	queryInsertUrl,
+	queryUpdateShortUrlVisitCount,
+	queryDeleteShortUrlById,
+	queryDeleteUrlByShortUrlId
+} from '../Queries/queries.js';
 
 export async function UrlShorten(req, res) {
 	const {url} = req.body;
@@ -29,6 +35,17 @@ export async function OpenUrl(req, res) {
 		const url = res.locals.shortUrl;
 		await db.query(queryUpdateShortUrlVisitCount, [url.visitCount+1, url.id]);
 		res.redirect(url.url);
+	} catch (error) {
+		res.status(500).send(error);
+	}
+}
+
+export async function DeleteUrl(req, res) {
+	try {
+		const id = req.params.id;
+		await db.query(queryDeleteUrlByShortUrlId, [id]);
+		await db.query(queryDeleteShortUrlById, [id]);
+		res.sendStatus(204);
 	} catch (error) {
 		res.status(500).send(error);
 	}

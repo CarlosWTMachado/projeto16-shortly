@@ -1,10 +1,12 @@
 import {authorizationSchema, urlSchema} from '../Schemas/schemas.js';
 import db from '../dbStrategy/db.js';
-import {querySelectUrlById,querySelectShortUrlByName} from '../Queries/queries.js';
-import bcrypt from 'bcrypt';
+import {
+	querySelectUrlById,
+	querySelectShortUrlByName,
+	querySelectShortUrlByEmail
+} from '../Queries/queries.js';
 import jwt from 'jsonwebtoken';
 import {jwtSecret} from '../variaveisDeAmbiente.js';
-//import {querySelectUserByEmail} from '../Queries/queries.js';
 
 export function ValidateUrlShorten(req, res, next) {
 	try{
@@ -76,6 +78,29 @@ async function VerifyShortUrlByName(name){
 	try{
 		const {rows: shortUrl} = await db.query(querySelectShortUrlByName, [name]);
 		if(shortUrl.length < 1) throw {code: 404, message: ""};
+		return shortUrl[0];
+	}catch(error){
+		throw error;
+	}
+}
+
+export async function ValidateDeleteUrl(req, res, next) {
+	try{
+		VerifyAuthorization(req.headers);
+		const tokenData = VerifyToken(req.headers);
+		await VerifyShortUrl(req.params.id);
+		await VerifyUrlOwner(tokenData.email, req.params.id);
+		next();
+	}catch (error){
+		if(error.code) return res.status(error.code).send(error.message);
+		return res.status(500).send(error);
+	}
+}
+
+async function VerifyUrlOwner(email, id){
+	try{
+		const {rows: shortUrl} = await db.query(querySelectShortUrlByEmail, [email, id]);
+		if(shortUrl.length < 1) throw {code: 401, message: ""};
 		return shortUrl[0];
 	}catch(error){
 		throw error;
