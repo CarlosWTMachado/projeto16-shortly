@@ -93,3 +93,19 @@ export const querySelectUserShortUrls = `
 	ON s.id = u."shortUrlId"
 	WHERE us.email = $1
 `;
+
+export const querySelectUserRank = `
+	SELECT 
+		us.id,
+		us.name,
+		COALESCE(COUNT(u."shortUrlId"),0) as "linksCount",
+		SUM(s."visitCount") as "visitCount"
+	FROM users us
+	JOIN urls u
+	ON u."userId" = us.id
+	JOIN "shortUrls" s
+	ON s.id = u."shortUrlId"
+	GROUP BY us.id
+	ORDER BY "visitCount"
+	LIMIT 10
+`;
