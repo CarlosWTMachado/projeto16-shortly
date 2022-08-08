@@ -1,5 +1,5 @@
 import db from '../dbStrategy/db.js';
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 import {
 	queryInsertShortUrl,
 	queryInsertUrl,

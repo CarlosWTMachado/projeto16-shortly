@@ -106,3 +106,15 @@ async function VerifyUrlOwner(email, id){
 		throw error;
 	}
 }
+
+export async function ValidateUser(req, res, next) {
+	try{
+		VerifyAuthorization(req.headers);
+		const tokenData = VerifyToken(req.headers);
+		res.locals.tokenData = tokenData;
+		next();
+	}catch (error){
+		if(error.code) return res.status(error.code).send(error.message);
+		return res.status(500).send(error);
+	}
+}

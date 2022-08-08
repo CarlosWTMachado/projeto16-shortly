@@ -65,3 +65,31 @@ export const queryDeleteUrlByShortUrlId = `
 	DELETE FROM urls
 	WHERE "shortUrlId" = $1
 `;
+
+export const querySelectUserWithVisitCount = `
+	SELECT
+		us.id,
+		us.name,
+		SUM(s."visitCount") as "visitCount"
+	FROM users us
+	JOIN urls u
+	ON u."userId" = us.id
+	JOIN "shortUrls" s
+	ON s.id = u."shortUrlId"
+	WHERE us.email = $1
+	GROUP BY us.id
+`;
+
+export const querySelectUserShortUrls = `
+	SELECT 
+		s.id,
+		s."shortUrl",
+		u.url,
+		s."visitCount"
+	FROM users us
+	JOIN urls u
+	ON u."userId" = us.id
+	JOIN "shortUrls" s
+	ON s.id = u."shortUrlId"
+	WHERE us.email = $1
+`;
