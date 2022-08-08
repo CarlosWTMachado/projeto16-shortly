@@ -99,11 +99,11 @@ export const querySelectUserRank = `
 		us.id,
 		us.name,
 		COALESCE(COUNT(u."shortUrlId"),0) as "linksCount",
-		SUM(s."visitCount") as "visitCount"
+		COALESCE(SUM(s."visitCount"),0) as "visitCount"
 	FROM users us
-	JOIN urls u
+	LEFT JOIN urls u
 	ON u."userId" = us.id
-	JOIN "shortUrls" s
+	LEFT JOIN "shortUrls" s
 	ON s.id = u."shortUrlId"
 	GROUP BY us.id
 	ORDER BY "visitCount"
